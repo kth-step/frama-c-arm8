@@ -49,6 +49,7 @@ let ikind_to_arm (kind : ikind) : arm_type =
   | IInt -> AInt (true, Word32)
   | IULong | IULongLong -> AInt (false, Word64)
   | ILong | ILongLong -> AInt (true, Word64)
+  | IUInt128 | IInt128 -> raise (ArmException "128-bit words are not supported by ARM")
 
 let rec typ_to_arm (typ : typ) : arm_type =
   match typ.tnode with

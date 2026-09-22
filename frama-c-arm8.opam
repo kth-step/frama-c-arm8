@@ -14,7 +14,7 @@ bug-reports: "https://github.com/VincentLagerros/frama-c-arm8/issues"
 depends: [
   "dune" {>= "3.13"}
   "ocaml" {>= "5.0"}
-  "frama-c" {>= "32" & < "33"}
+  "frama-c" {>= "33" & < "34"}
   "odoc" {with-doc}
 ]
 build: [
