@@ -18,8 +18,8 @@ jobs:
         os:
           - ubuntu-latest
         ocaml-compiler:
-          - "5.3"
           - "5.4"
+          - "5.5"
 
     runs-on: ${{ matrix.os }}
 
@@ -31,8 +31,11 @@ jobs:
         uses: ocaml/setup-ocaml@v3
         with:
           ocaml-compiler: ${{ matrix.ocaml-compiler }}
+
+      - name: Build dependencies
+        run: opam install . --deps-only
+
       - run: |
-          opam install . --deps-only
           opam exec -- why3 config detect
           opam exec -- dune build
           opam exec -- dune test
