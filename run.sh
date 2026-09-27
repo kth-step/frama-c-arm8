@@ -1,1 +1,1 @@
-dune build --profile release --no-print-directory && dune exec --profile release --no-print-directory -- frama-c -arm8 examples/main.c -verbose 0 -debug 0 -kernel-verbose 0 -arm8-type="ba" -arm8-acsl -arm8-global
+dune build --no-print-directory && dune exec --no-print-directory -- frama-c -arm8 examples/main.c -verbose 0 -debug 0 -kernel-verbose 0 -arm8-type="ba" -arm8-acsl -arm8-global

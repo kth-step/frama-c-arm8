@@ -16,7 +16,7 @@ type arm_predicate =
   (* p1 ⇔ p2 *)
   | Aiff of arm_predicate * arm_predicate
   (* if c then p1 else p2 *)
-  | Aif of arm_term * arm_predicate * arm_predicate
+  | Aif of arm_predicate * arm_predicate * arm_predicate
   (* p1 ∧ p2 *)
   | Aand of arm_predicate * arm_predicate
   (* p1 ∨ p2 *)
@@ -116,7 +116,7 @@ and arm_term_node =
   | ACast of arm_cast * arm_word_size * arm_term
   (* Also used for boolean casting *)
   (* if c then p1 else p2 *)
-  | Aif of arm_term * arm_term * arm_term
+  | Aif of arm_predicate * arm_term * arm_term
   (* Applications like \min and \max *)
   | ABuiltin of arm_builtin * arm_term list
 [@@deriving eq]

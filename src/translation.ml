@@ -49,6 +49,7 @@ let ikind_to_arm (kind : ikind) : arm_type =
   | IInt -> AInt (true, Word32)
   | IULong | IULongLong -> AInt (false, Word64)
   | ILong | ILongLong -> AInt (true, Word64)
+  | IInt128 | IUInt128 -> raise (ArmException "128-bit words are not supported by ARM")
 
 let rec typ_to_arm (typ : typ) : arm_type =
   match typ.tnode with
@@ -129,7 +130,7 @@ let rec term_to_arm (env : arm_enviroment) (term : term) : arm_term =
     | TLval (host, offset) -> l_value_to_arm env host offset
     | Tat (t, label) -> at_to_arm env t label
     | Tif (t1, t2, t3) ->
-        Aif (term_to_arm env t1, term_to_arm env t2, term_to_arm env t3)
+        Aif (predicate_to_arm env t1, term_to_arm env t2, term_to_arm env t3)
     (* Align and sizeof is the same on ARMv8 for primative types *)
     | TSizeOf typ | TAlignOf typ -> typ |> typ_to_bytes |> int_to_arm_node
     | TAddrOf (host, offset) -> address_of_l_value env host offset
@@ -338,10 +339,11 @@ and cast_to_arm_term (_env : arm_enviroment) (from_ty : arm_type)
         if word_to_bytes from_size < word_to_bytes to_size then
           ACast (AZeroExtend, to_size, arm_term)
         else ACast (AExtract, to_size, arm_term)
-    (* if b then 1 else 0 *)
+    (* if b = T then 1 else 0 *)
     | ABool, AInt _ ->
         Aif
-          ( arm_term,
+        (* This is an ugly solution, but require additional nodes if we want a clean solution*)
+          ( Arel (Req, arm_term, AConst (ABoolean true) |> node_to_term ABool),
             1 |> int_to_arm_node |> node_to_term to_ty,
             0 |> int_to_arm_node |> node_to_term to_ty )
     (* ptr -> int just extracts the lower bits *)
@@ -540,7 +542,7 @@ and predicate_to_arm (env : arm_enviroment) (predicate : predicate) :
   | Pxor (p1, p2) -> Axor (predicate_to_arm env p1, predicate_to_arm env p2)
   | Pnot p -> Anot (predicate_to_arm env p)
   | Pif (c, p1, p2) ->
-      Aif (term_to_arm env c, predicate_to_arm env p1, predicate_to_arm env p2)
+      Aif (predicate_to_arm env c, predicate_to_arm env p1, predicate_to_arm env p2)
   | Plet (x, p) ->
       let_predicate env x (fun local_env -> predicate_to_arm local_env p)
   | Paligned (t1, t2) ->

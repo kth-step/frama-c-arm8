@@ -164,20 +164,20 @@ and pp_arm_term (out : contract_printer) (term : arm_term) =
       Format.fprintf fmt " : word%d)" (arg1.ty |> size_of |> word_to_bits)
   | Aif (c, t1, t2) ->
       let fmt = out.fmt in
-      Format.fprintf fmt "if (";
-      pp_arm_term out c;
-      Format.fprintf fmt ") then (";
+      Format.fprintf fmt "(if ";
+      pp_arm_predicate out c;
+      Format.fprintf fmt " then ";
       pp_arm_term out t1;
-      Format.fprintf fmt ") else (";
+      Format.fprintf fmt " else ";
       pp_arm_term out t2;
-      Format.fprintf fmt ")"
+      Format.fprintf fmt ")";
 
-let rec unfold_and (predicate : arm_predicate) : arm_predicate list =
+and unfold_and (predicate : arm_predicate) : arm_predicate list =
   match predicate with
   | Aand (p1, p2) -> p2 :: unfold_and p1
   | _ -> [ predicate ]
 
-let rec pp_arm_predicate (out : contract_printer) (predicate : arm_predicate) =
+and pp_arm_predicate (out : contract_printer) (predicate : arm_predicate) =
   let fmt = out.fmt in
   match predicate with
   | Aiff (p1, p2) ->
@@ -188,7 +188,7 @@ let rec pp_arm_predicate (out : contract_printer) (predicate : arm_predicate) =
       Format.fprintf fmt ")"
   | Aif (c, t1, t2) ->
       Format.fprintf fmt "if (";
-      pp_arm_term out c;
+      pp_arm_predicate out c;
       Format.fprintf fmt ") then (";
       pp_arm_predicate out t1;
       Format.fprintf fmt ") else (";

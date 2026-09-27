@@ -134,7 +134,7 @@ and pp_arm_term_node (out : contract_printer) (node : arm_term_node) =
   | Aif (c, t1, t2) ->
       let fmt = out.fmt in
       Format.fprintf fmt "If(";
-      pp_arm_term out c;
+      pp_arm_predicate out c;
       Format.fprintf fmt ", ";
       pp_arm_term out t1;
       Format.fprintf fmt ", ";
@@ -151,7 +151,7 @@ and pp_arm_term (out : contract_printer) (term : arm_term) =
         ">>>>"*)
       raise (ArmException "Unknown pp_arm_term")*)
 
-let pp_no_overflow (out : contract_printer) (o : no_overflow_type)
+and pp_no_overflow (out : contract_printer) (o : no_overflow_type)
     (lhs : arm_term) (rhs : arm_term) =
   let prefix =
     match o with
@@ -168,7 +168,7 @@ let pp_no_overflow (out : contract_printer) (o : no_overflow_type)
   pp_arm_term out rhs;
   Format.fprintf out.fmt "%s)" suffix
 
-let rec pp_arm_predicate (out : contract_printer) (predicate : arm_predicate) =
+and pp_arm_predicate (out : contract_printer) (predicate : arm_predicate) =
   let fmt = out.fmt in
   match predicate with
   (*| Aunknown -> Format.fprintf fmt "FreshBool()"*)
@@ -180,7 +180,7 @@ let rec pp_arm_predicate (out : contract_printer) (predicate : arm_predicate) =
       Format.fprintf fmt ")"
   | Aif (c, t1, t2) ->
       Format.fprintf fmt "If(";
-      pp_arm_term out c;
+      pp_arm_predicate out c;
       Format.fprintf fmt ", ";
       pp_arm_predicate out t1;
       Format.fprintf fmt ", ";
