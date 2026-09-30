@@ -31,7 +31,7 @@ jobs:
         uses: ocaml/setup-ocaml@v3
         with:
           ocaml-compiler: ${{ matrix.ocaml-compiler }}
-      
+
       - name: Build dependencies
         run: opam install . --deps-only
 
