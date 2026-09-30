@@ -1,6 +1,8 @@
 # Frama-C ARMv8
 
-Automatically generate HOL4 ARMv8 contracts from ACSL contract annotations.
+[![Build Status](https://github.com/kth-step/frama-c-arm8/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/kth-step/frama-c-arm8/actions/workflows/build.yml)
+
+Frama-C plugin for automatically generating HOL4 ARMv8 contracts from ACSL contract annotations.
 
 ### Requirements
 

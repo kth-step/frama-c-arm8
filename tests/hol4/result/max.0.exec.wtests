@@ -1,0 +1,9 @@
+{
+  "dir": "tests/hol4/result",
+  "info": "TEST #0 OF TEST FILE tests/hol4/max.c",
+  "cmd": "frama-c -check -no-autoload-plugins -load-plugin=arm8    max.c -arm8 -arm8-type hol > \"max.0.res.log\" 2> \"max.0.err.log\"",
+  "out": "max.0.res.log",
+  "err": "max.0.err.log",
+  "oracle_out": "../oracle/max.0.res.oracle",
+  "oracle_err": "../oracle/max.0.err.oracle"
+}

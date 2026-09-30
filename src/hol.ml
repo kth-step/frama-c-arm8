@@ -2,7 +2,7 @@ open Specification
 open Translation
 open Cil_types
 
-let pre_state = "s"
+let pre_state = "st"
 let post_state = "st"
 
 type contract_printer = { fmt : Format.formatter; post : bool }
