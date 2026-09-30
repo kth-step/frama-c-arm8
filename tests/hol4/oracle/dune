@@ -1,0 +1,3 @@
+(rule (target "max.0.err.oracle") (mode fallback) (action (write-file "max.0.err.oracle" "")))
+(rule (target "max.0.res.oracle") (mode fallback) (action (write-file "max.0.res.oracle" "")))
+
