@@ -1,6 +1,6 @@
 # Frama-C ARMv8
 
-[![Build Status](https://github.com/kth-step/frama-c-arm8/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/kth-step/frama-c-arm8/actions/workflows/build.yml)
+[![Build Status](https://github.com/kth-step/frama-c-arm8/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/kth-step/frama-c-arm8/actions/workflows/build.yml)
 
 Frama-C plugin for automatically generating HOL4 ARMv8 contracts from ACSL contract annotations.
 
@@ -12,7 +12,7 @@ Frama-C plugin for automatically generating HOL4 ARMv8 contracts from ACSL contr
 4. HOLBA installed from https://github.com/kth-step/HolBA/tree/master
 
 ### Building
-1. `git clone https://github.com/VincentLagerros/frama-c-arm8`
+1. `git clone https://github.com/kth-step/frama-c-arm8`
 2. `cd frama-c-arm8`
 3. Run with `dune build --profile release && dune exec --profile release -- frama-c -arm8 "[C file]" -arm8-type="holba"` or alternatively `./run.sh` 
 
