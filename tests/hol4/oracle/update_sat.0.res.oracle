@@ -1,0 +1,42 @@
+[kernel] Parsing update_sat.c (with preprocessing)
+(* ----------------- *)
+(* Utility functions *)
+(* ----------------- *)
+
+Definition arm8_load_64_def:
+  arm8_load_64 m a =
+  (((m (a + 7w)) @@
+  (((m (a + 6w)) @@
+  (((m (a + 5w)) @@
+  (((m (a + 4w)) @@
+  (((m (a + 3w)) @@
+   (((m (a + 2w)) @@
+     ((m (a + 1w)) @@ (m (a + 0w))):bool[16]):bool[24])):bool[32])
+    ):bool[40])):bool[48])):bool[56])):bool[64])
+End
+
+(* -------------- *)
+(* ARMv8 contract *)
+(* -------------- *)
+
+(* ------- Function update_sat -------*)
+Definition arm8_update_sat_pre_def:
+ arm8_update_sat_pre (pre_x0:word64) (pre_x1:word64) (pre_x2:word64) (pre_x3:word64) (st:arm8_state) : bool =
+  ((((-(2147483647w : word64)) - (1w : word64)) < pre_x2) /\
+  (pre_x2 < pre_x3) /\
+  (pre_x2 <= pre_x1) /\
+  (pre_x1 <= pre_x3) /\
+  (pre_x3 < (2147483647w : word64)) /\
+  (pre_x3 = (st.REG 3w)) /\
+  (pre_x2 = (st.REG 2w)) /\
+  (pre_x1 = (st.REG 1w)) /\
+  (pre_x0 = (st.REG 0w)))
+End
+
+Definition arm8_update_sat_post_def:
+ arm8_update_sat_post (pre_x0:word64) (pre_x1:word64) (pre_x2:word64) (pre_x3:word64) (st:arm8_state) : bool =
+  (((pre_x0 = (0w : word64)) ==> ((st.REG 0w) = (word_smax pre_x2 (pre_x1 - (1w : word64)) : word64))) /\
+  ((pre_x0 <> (0w : word64)) ==> ((st.REG 0w) = (word_smin pre_x3 (pre_x1 + (1w : word64)) : word64))))
+End
+
+
