@@ -39,3 +39,11 @@ Generated hol files can test build by editing the `spec_arm8Script.sml` template
 `-arm8-acsl` Enables pretty printing of the ensures/requires clause as a HOL comment
 
 `-arm8-globals` Enables globals variables to be used in a contract, but does not autogenerate the code for the globals
+
+
+### Testing
+
+After adding tests with oracles based on frama-c-ptests, the following command should be run:
+```shell
+frama-c-ptests -dune-alias runtest -macro-default-options "-check -no-autoload-plugins"
+```

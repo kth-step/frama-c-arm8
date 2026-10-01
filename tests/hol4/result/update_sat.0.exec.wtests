@@ -1,0 +1,9 @@
+{
+  "dir": "tests/hol4/result",
+  "info": "TEST #0 OF TEST FILE tests/hol4/update_sat.c",
+  "cmd": "frama-c -check -no-autoload-plugins -load-plugin=arm8    update_sat.c -arm8 -arm8-type hol > \"update_sat.0.res.log\" 2> \"update_sat.0.err.log\"",
+  "out": "update_sat.0.res.log",
+  "err": "update_sat.0.err.log",
+  "oracle_out": "../oracle/update_sat.0.res.oracle",
+  "oracle_err": "../oracle/update_sat.0.err.oracle"
+}
