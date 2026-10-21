@@ -110,9 +110,7 @@ let print_header_dbg (_out : Format.formatter)
 let print_header_hol (out : Format.formatter)
     (globals : (varinfo * initinfo option) list) =
   let write =
-    "Theory spec_arm8\n\
-    Ancestors words arm8\n\n\
-    (* ----------------- *)\n\
+    "(* ----------------- *)\n\
      (* Utility functions *)\n\
      (* ----------------- *)\n\n\
      Definition arm8_load_64_def:\n\
