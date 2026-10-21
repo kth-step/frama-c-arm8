@@ -110,7 +110,9 @@ let print_header_dbg (_out : Format.formatter)
 let print_header_hol (out : Format.formatter)
     (globals : (varinfo * initinfo option) list) =
   let write =
-    "(* ----------------- *)\n\
+    "Theory spec_arm8\n\
+    Ancestors words arm8\n\n\
+    (* ----------------- *)\n\
      (* Utility functions *)\n\
      (* ----------------- *)\n\n\
      Definition arm8_load_64_def:\n\
@@ -197,11 +199,9 @@ let run () =
       close_out chan)
   with
   | Specification.ArmException x ->
-      Printf.eprintf "Unsupported contract: %s\n" x;
-      exit 1
+      Kernel.abort "Unsupported contract: %s\n" x
   | Sys_error _ as exc ->
       let msg = Printexc.to_string exc in
-      Printf.eprintf "There was an error: %s\n" msg;
-      exit 1
+      Kernel.abort "There was an error: %s\n" msg
 
 let () = Boot.Main.extend run

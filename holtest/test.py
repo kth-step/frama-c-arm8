@@ -6,8 +6,23 @@
 from os import system
 import os
 import time
+import re
+
 folder = "CASP_dataset/"
-dir_list = sorted(os.listdir(folder))
+
+def natural_key(text):
+    return [int(c) if c.isdigit() else c.lower() for c in re.split(r'(\d+)', text)]
+
+def rerun():
+    return list(map(lambda x: x.replace(".sml", ".c"), sorted(os.listdir("rerun"),key=natural_key)))
+
+def default():
+    return sorted(os.listdir(folder),key=natural_key)
+
+dir_list = default()
+print(dir_list)
+
+system("dune build")
 
 for file in dir_list:
     # Manual break, dirty fix
@@ -24,7 +39,7 @@ for file in dir_list:
     hol_result = -1
     compile_result = -1
     hol_time = start
-    compile_result = system(f'printf "Theory spec_arm8\nAncestors words arm8\n\n" > spec_arm8Script.sml && dune exec --no-print-directory -- frama-c -arm8 {folder}{file} -arm8-type="hol" -verbose 0 -debug 0 -kernel-verbose 0 >> spec_arm8Script.sml 2>&1')
+    compile_result = system(f'dune exec --no-print-directory -- frama-c -arm8 {folder}{file} -arm8-type="hol" -arm8-acsl -verbose 0 -debug 0 -kernel-verbose 0 > spec_arm8Script.sml 2>&1')
     compile_time = time.time()
     if compile_result:
         system(f"cp spec_arm8Script.sml compile-error/{file.replace(".c", ".sml")}")

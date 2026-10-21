@@ -35,5 +35,4 @@ for file_name in dir_list:
 avg_translation_time = translation_time / no_error
 avg_hol_time = hol_time / no_error
 
-# translate_error = 287 hol_error = 0 total = 537 avg_translation_time = 0.6957196836471558 avg_hol_time = 10.679097805023194
 print("translate_error =", translate_error, "hol_error =", hol_error, "total =", total, "avg_translation_time =", avg_translation_time, "avg_hol_time =", avg_hol_time)

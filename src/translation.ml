@@ -764,9 +764,9 @@ let fn_to_arm (source : arm_translation_source) : arm_contract =
   behaviors
   |> List.filter (fun x -> x.b_assumes |> List.is_empty |> not)
   |> List.iter (fun x ->
-      Kernel.warning
-        "Unsupported assumes clause in function '%s', using 'assumes \\true' instead"
-        x.b_name);
+      (*Kernel.warning*)
+      (raise (ArmException
+        (Format.sprintf "Unsupported assumes clause in function '%s', using 'assumes \\true' instead" x.b_name))));
 
   let contract =
     List.fold_left

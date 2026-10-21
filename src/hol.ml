@@ -170,7 +170,7 @@ and pp_arm_term (out : contract_printer) (term : arm_term) =
       pp_arm_term out t1;
       Format.fprintf fmt " else ";
       pp_arm_term out t2;
-      Format.fprintf fmt ")";
+      Format.fprintf fmt ")"
 
 and unfold_and (predicate : arm_predicate) : arm_predicate list =
   match predicate with
@@ -255,7 +255,7 @@ and pp_arm_predicate (out : contract_printer) (predicate : arm_predicate) =
   | Anot p ->
       Format.fprintf fmt "~";
       pp_arm_predicate out p
-  (*| _ -> raise (ArmException "Unknown pp_arm_predicate")*)
+(*| _ -> raise (ArmException "Unknown pp_arm_predicate")*)
 
 let add_variable (term : arm_term) (name : arm_logic_var)
     (predicate : arm_predicate) =
@@ -271,12 +271,18 @@ let add_variables (variables : (arm_logic_var * arm_term) list)
 
 let print_list (out : Format.formatter) (prefix : string)
     (list : identified_predicate list) =
+  let re1 = Str.regexp "(\\*" in
+  let re2 = Str.regexp "\\*)" in
+
   List.iter
     (fun fn ->
+      let comment =
+        Format.asprintf "%a" Printer.pp_predicate_node
+          fn.ip_content.tp_statement.pred_content
+      in
       (* Double print, otherwise we get nested formatting logic *)
       Format.fprintf out "%s %s;\n" prefix
-        (Format.asprintf "%a" Printer.pp_predicate_node
-           fn.ip_content.tp_statement.pred_content))
+        (comment |> Str.global_replace re1 "( *" |> Str.global_replace re2 "* )"))
     list
 
 let print_header (out : Format.formatter)
