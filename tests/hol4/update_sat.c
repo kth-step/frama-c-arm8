@@ -1,6 +1,7 @@
 /* run.config */
 #include <stdint.h>
 #include <limits.h>
+
 /*@ requires INT_MIN < min < max && min <= timer <= max < INT_MAX;
     assigns \nothing;
     ensures
