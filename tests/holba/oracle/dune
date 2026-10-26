@@ -1,0 +1,3 @@
+(rule (target "update_sat.0.err.oracle") (mode fallback) (action (write-file "update_sat.0.err.oracle" "")))
+(rule (target "update_sat.0.res.oracle") (mode fallback) (action (write-file "update_sat.0.res.oracle" "")))
+
