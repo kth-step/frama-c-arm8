@@ -479,51 +479,39 @@ and valid_to_arm (env : arm_enviroment) (label : logic_label) (term : term) :
           let arm_range_end =
             binop_to_arm env PlusPI ptr range_end |> node_to_term base_ptr.ty
           in
-
-          (* 0x20000 <= (p+a) && (p+b) < 0x100000000 && p % size_of(p) == 0 *)
+          (* p % size_of(p) == 0 && 0x20000 <= (p+a) && (p+b) < 0x100000000 *)
           Aand
-            ( Aand
-                ( Arel (Rle, int_to_arm 0x20000, arm_range_start),
-                  Arel (Rlt, arm_range_end, int_to_arm 0x100000000) ),
-              Arel
-                ( Req,
-                  (* Keep the type*)
-                  node_to_term base_ptr.ty
-                    (ABinOp
-                       ( AMod,
-                         base_ptr,
-                         int_to_arm (base_ptr.ty |> size_of |> word_to_bytes) )),
-                  int_to_arm 0 ) )
+            (Arel
+              (Req,
+               node_to_term base_ptr.ty
+                (ABinOp (ABAnd, base_ptr, int_to_arm 7)),
+               int_to_arm 0),
+             Aand
+               ( Arel (Rle, int_to_arm 0x20000, arm_range_start),
+                 Arel (Rlt, arm_range_end, int_to_arm 0x100000000)))
       | _ ->
           let arm_term = term_to_arm env term in
 
           (* The nullcheck is for "\valid{L}((char ptr)\null) and \valid_read{L}((char ptr)\null) are always false, forany logic label L"*)
-          (* The mod check is for aligment for armv8, technically frama-c have the \aligned keyword, but for armv8 "safely dereferenced" means it must be aligned *)
 
-          (*
-        This is the same is HOL, but they check that the lower 3 bits are 0.
+          (* The check that lower 3 bits are 0 is for alignment for armv8, technically frama-c have the \aligned keyword, but for armv8 "safely dereferenced" means it must be aligned *)
 
-        adress bitwise-and 0b111 = 0
-         ``^var_tm && 7w = 0w /\ ^prog_addr_max_tm <=+ ^var_tm /\ ^var_tm <+ ^mem_addr_bound_tm``
+          (* adress bitwise-and 0b111 = 0
+             ``^var_tm && 7w = 0w /\ ^prog_addr_max_tm <=+ ^var_tm /\ ^var_tm <+ ^mem_addr_bound_tm``
 
-        where
+             where
 
-        val prog_addr_max_tm = ``0x20000w:word64``;
-        val mem_addr_bound_tm = ``0x100000000w:word64``;
-      *)
+             val prog_addr_max_tm = ``0x20000w:word64``;
+             val mem_addr_bound_tm = ``0x100000000w:word64``; *)
           Aand
-            ( Aand
-                ( Arel (Rle, int_to_arm 0x20000, arm_term),
-                  Arel (Rlt, arm_term, int_to_arm 0x100000000) ),
-              Arel
-                ( Req,
-                  (* Keep the type*)
-                  node_to_term arm_term.ty
-                    (ABinOp
-                       ( AMod,
-                         arm_term,
-                         int_to_arm (arm_term.ty |> size_of |> word_to_bytes) )),
-                  int_to_arm 0 ) ))
+            (Arel
+              ( Req,
+                node_to_term arm_term.ty
+                 (ABinOp (ABAnd, arm_term, int_to_arm 7)),
+                int_to_arm 0),
+              Aand
+              ( Arel (Rle, int_to_arm 0x20000, arm_term),
+                Arel (Rlt, arm_term, int_to_arm 0x100000000))))
   | BuiltinLabel _ ->
       raise
         (ArmException
